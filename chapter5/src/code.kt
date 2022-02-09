@@ -164,3 +164,46 @@ import kotlin.math.max
 //    val numbers = mapOf(0 to "zero", 1 to "one")
 //    println(numbers.mapValues { it.value.uppercase() })
 //}
+
+// TODO :all, any, count, find 함수
+//data class Person(val name:String, val age:Int)
+//val canBeInClub27 = { p:Person -> p.age <= 27 }
+//fun main() {
+//    val people = listOf(Person("Alice", 27), Person("Bob",31))
+//    println(people.all(canBeInClub27))
+//    println(people.any(canBeInClub27))
+//
+//    val list = listOf(1, 2, 3)
+//    println(!list.all { it == 3 })
+//    println(list.any { it != 3 })
+//
+//    println(people.count(canBeInClub27))
+//
+//    println(people.find(canBeInClub27))
+//}
+
+// TODO : groupBy 함수
+//data class Person(val name:String, val age:Int)
+//fun main() {
+//    val people = listOf(Person("Alice", 31), Person("Bob",29), Person("Carol",31))
+//    println(people.groupBy { it.age })
+//
+//    val list = listOf("a", "ab", "b")
+//    println(list.groupBy(String::first))
+//}
+
+// TODO : flat과 flatten
+class Book(val title: String, val authors: List<String>)
+fun main() {
+    val strings = listOf("abc", "def")
+    println(strings.flatMap { it.toList() })
+
+    val books = listOf( Book("Thursday Next", listOf("Jasper Fforde")),
+                                   Book("Mort", listOf("Terry Pratchett")),
+                                   Book("Good Omens", listOf("Terry Pratchett", "Neil Gaiman")) )
+    println(books.flatMap { it.authors }.toSet())
+
+    val list = listOf(listOf(1, 2, 3), listOf(3, 4, 5))
+    println(list.flatten().toSet())
+
+}
