@@ -1,3 +1,4 @@
+import java.io.File
 import kotlin.math.max
 
 //data class Person(val name: String, val age: Int)
@@ -193,17 +194,65 @@ import kotlin.math.max
 //}
 
 // TODO : flat과 flatten
-class Book(val title: String, val authors: List<String>)
+//class Book(val title: String, val authors: List<String>)
+//fun main() {
+//    val strings = listOf("abc", "def")
+//    println(strings.flatMap { it.toList() })
+//
+//    val books = listOf( Book("Thursday Next", listOf("Jasper Fforde")),
+//                                   Book("Mort", listOf("Terry Pratchett")),
+//                                   Book("Good Omens", listOf("Terry Pratchett", "Neil Gaiman")) )
+//    println(books.flatMap { it.authors }.toSet())
+//
+//    val list = listOf(listOf(1, 2, 3), listOf(3, 4, 5))
+//    println(list.flatten().toSet())
+//}
+
+// TODO : Sequence
+//data class Person(val name:String, val age:Int)
+//fun main() {
+//    val people = listOf(Person("Alice", 27), Person("Bob",31))
+//    people.map(Person::name).filter { it.startsWith("A") }
+//
+//    people.asSequence()
+//        .map(Person::name)
+//        .filter { it.startsWith("A") }
+//        .toList()
+
+//    listOf(1, 2, 3, 4).asSequence()
+//        .map { print("map($it) "); it * it }
+//        .filter { print("filter($it) "); it % 2 == 0 }
+//        .toList()
+
+//    println(listOf(1, 2, 3, 4).asSequence()
+//        .map { it * it }
+//        .find { it > 3 })
+
+//    val people = listOf(
+//        Person("Alice", 29),
+//        Person("Bob",31),
+//        Person("Charles", 31),
+//        Person("Dan",21)
+//    )
+//    println(people.asSequence()
+//        .map{ print("map "); it.name }
+//        .filter { print("filter($it) "); it.length < 4 }
+//        .toList())
+//
+//    println(people.asSequence()
+//        .filter { print("filter(${it.name}) "); it.name.length < 4 }
+//        .map{ print("map "); it.name }
+//        .toList())
+//}
+
+// TODO : generateSequence
+fun File.isInsideHiddenDirectory() =
+    generateSequence(this){it.parentFile}.any{it.isHidden}
 fun main() {
-    val strings = listOf("abc", "def")
-    println(strings.flatMap { it.toList() })
+    val naturalNumbers = generateSequence(0){ it + 1 }
+    val numbersTo100 = naturalNumbers.takeWhile { it <= 100 }
+    println(numbersTo100.sum())
 
-    val books = listOf( Book("Thursday Next", listOf("Jasper Fforde")),
-                                   Book("Mort", listOf("Terry Pratchett")),
-                                   Book("Good Omens", listOf("Terry Pratchett", "Neil Gaiman")) )
-    println(books.flatMap { it.authors }.toSet())
-
-    val list = listOf(listOf(1, 2, 3), listOf(3, 4, 5))
-    println(list.flatten().toSet())
-
+    val file = File("/Users/ideogsu/.HiddenDir/a.txt")
+    println(file.isInsideHiddenDirectory())
 }
