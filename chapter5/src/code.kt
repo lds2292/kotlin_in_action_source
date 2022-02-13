@@ -1,4 +1,5 @@
 import java.io.File
+import java.lang.StringBuilder
 import kotlin.math.max
 
 //data class Person(val name: String, val age: Int)
@@ -246,13 +247,119 @@ import kotlin.math.max
 //}
 
 // TODO : generateSequence
-fun File.isInsideHiddenDirectory() =
-    generateSequence(this){it.parentFile}.any{it.isHidden}
-fun main() {
-    val naturalNumbers = generateSequence(0){ it + 1 }
-    val numbersTo100 = naturalNumbers.takeWhile { it <= 100 }
-    println(numbersTo100.sum())
+//fun File.isInsideHiddenDirectory() =
+//    generateSequence(this){it.parentFile}.any{it.isHidden}
+//fun main() {
+//    val naturalNumbers = generateSequence(0){ it + 1 }
+//    val numbersTo100 = naturalNumbers.takeWhile { it <= 100 }
+//    println(numbersTo100.sum())
+//
+//    val file = File("/Users/ideogsu/.HiddenDir/a.txt")
+//    println(file.isInsideHiddenDirectory())
+//}
 
-    val file = File("/Users/ideogsu/.HiddenDir/a.txt")
-    println(file.isInsideHiddenDirectory())
+// TODO : SAM 생성자
+//fun createAllDoneRunnable() : Runnable {
+//    return Runnable { println("All done!")}
+//}
+//
+//val listener = OnClickListener { view ->
+//    val text = when (view.id){
+//        R.id.button1 -> "First button"
+//        R.id.button2 -> "Second button"
+//        else -> "Unknown button"
+//    }
+//    toast(text)
+//}
+//fun main() {
+//    createAllDoneRunnable().run()
+//}
+// TODO : 리스트 5.16 알파벳 만들기
+//fun alphabet (): String{
+//    val result = StringBuilder()
+//    for (letter in 'A'..'Z'){
+//        result.append(letter)
+//    }
+//    result.append("\nNow I Know the alphabet!")
+//    return result.toString()
+//}
+//fun main() {
+//    println(alphabet())
+//}
+
+// TODO : 리스트 5.17 with을 사용해 알파벳 만들기
+//fun alphabet (): String{
+//    val stringBuilder = StringBuilder()
+//
+//    // 메소드를 호출하려는 수신객체의 메소드를 호출한다
+//    return with (stringBuilder){
+//        for (letter in 'A'..'Z'){
+//            // this를 명시해서 앞에서 지정한 수신 객체의
+//            // 메소드를 호출한다
+//            this.append(letter)
+//        }
+//        // this를 생략하고 메소드를 호출
+//        append("\nNow I Know the alphabet!")
+//        // 람다에서 값을 반환
+//        this.toString()
+//    }
+//}
+//fun main() {
+//    println(alphabet())
+//}
+
+// TODO : 리스트 5.18 with와 식을 본문으로 하는 함수를 활용해 알파벳 만들기
+//fun alphabet () = with (StringBuilder()){
+//    for (letter in 'A'..'Z'){
+//        append(letter)
+//    }
+//    append("\nNow I Know the alphabet!")
+//    toString()
+//}
+
+// TODO : 리스트 5.19 apply를 사용해 알파벳 만들기
+//fun alphabet () = StringBuilder().apply {
+//    for (letter in 'A'..'Z'){
+//        append(letter)
+//    }
+//    append("\nNow I Know the alphabet!")
+//}.toString()
+
+// TODO : 리스트 5.20 apply를 TextView 초기화에 사용하기
+//fun createViewWithCustomAttributes(contenxt : Context) =
+//    TextView(context).apply {
+//        text = "Sample Text"
+//        textSize = 20.0
+//        setPadding(10, 0, 0, 0)
+//    }
+
+// TODO : 리스트 5.21 buildString으로 알파벳 만들기
+//fun alphabet() = buildString {
+//    for (letter in 'A'..'Z'){
+//        append(letter)
+//    }
+//    append("\nNow I Know the alphabet!")
+//}
+
+// TODO : also 사용
+//fun main() {
+//    val numbers = mutableListOf("one", "two", "three")
+//    numbers.also {
+//        println("The list elements before adding new one: $it")
+//    }.add("four")
+//
+//    println(numbers)
+//}
+
+// TODO : let 사용
+fun main() {
+    val numbers = mutableListOf("one", "two", "three", "four", "five")
+
+    val resultList = numbers.map { it.length }
+        .filter { it > 3 }
+    println(resultList)
+
+    numbers.map { it.length }
+        .filter { it > 3 }
+        .let { println(it) }
 }
