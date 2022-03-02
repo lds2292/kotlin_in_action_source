@@ -416,7 +416,6 @@ import kotlin.reflect.KProperty
 // TODO : 리스트 7.24 Delegate.observable을 사용해 프로퍼티 변경 통지 구현하기
 open class PropertyChangeAware{
     protected val changeSupport = PropertyChangeSupport(this)
-
     fun addPropertyChangeListener(listener: PropertyChangeListener){
         changeSupport.addPropertyChangeListener(listener)
     }
