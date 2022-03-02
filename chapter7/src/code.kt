@@ -1,7 +1,11 @@
+import java.beans.PropertyChangeListener
+import java.beans.PropertyChangeSupport
 import java.lang.IndexOutOfBoundsException
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.LocalDate
+import kotlin.properties.Delegates
+import kotlin.reflect.KProperty
 
 // data class Point(val x:Int, val y:Int)
 
@@ -207,12 +211,239 @@ import java.time.LocalDate
 //}
 
 // TODO : 리스트 7.16 구조 분해 선언을 사용해 맵 이터레이션
-fun printEntries(map: Map<String, String>){
-    for ((key, value) in map){
-        println("$key -> $value")
+//fun printEntries(map: Map<String, String>){
+//    for ((key, value) in map){
+//        println("$key -> $value")
+//    }
+//}
+//fun main() {
+//    val map = mapOf("Oracle" to "Java", "JetBrains" to "Kotlin")
+//    printEntries(map)
+//}
+
+// TODO : 위임프로퍼티
+//class Delegate {
+//    operator fun getValue(...) {...}
+//    operator fun setValue(..., value: Type) {...}
+//}
+//
+//class Foo {
+//    var p: Type by Delegate()  // by 키워드는 프로퍼티와 위임 객체를 연결한다
+//}
+
+// TODO : 리스트 7.17 지연 초기화를 뒷받침하는 프로퍼티를 통해 구현하기
+//fun loadEmails(person: Person):List<Email>{
+//    println("${person.name}의 이메일을 가져옴")
+//    return listOf()
+//}
+//data class Email(val subject: String, val contents: String)
+//class Person(val name: String){
+//    private var _emails: List<Email>? = null
+//    val emails: List<Email>
+//        get() {
+//            if (_emails == null){
+//                _emails = loadEmails(this)
+//            }
+//            return _emails!!
+//        }
+//}
+//
+//fun main() {
+//    val p = Person("Alice")
+//    p.emails
+//    p.emails
+//}
+
+// TODO : 리스트 7.18 지연 초기화를 위임 프로퍼티를 통해 구현하기
+//fun loadEmails(person: Person):List<Email>{
+//    println("${person.name}의 이메일을 가져옴")
+//    return listOf()
+//}
+//data class Email(val subject: String, val contents: String)
+//class Person(val name: String){
+//    val emails by lazy { loadEmails(this) }
+//}
+//fun main() {
+//    val p = Person("Alice")
+//    p.emails
+//    p.emails
+//}
+
+// TODO : 리스트 7.19 PropertyChangeSupport를 사용하기 위한 도우미 클래스
+//open class PropertyChangeAware{
+//    protected val changeSupport = PropertyChangeSupport(this)
+//
+//    fun addPropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.addPropertyChangeListener(listener)
+//    }
+//
+//    fun removePropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.removePropertyChangeListener(listener)
+//    }
+//}
+
+// TODO : 리스트 7.20 프로퍼티 변경 통지를 직접 구현하기
+//open class PropertyChangeAware{
+//    protected val changeSupport = PropertyChangeSupport(this)
+//
+//    fun addPropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.addPropertyChangeListener(listener)
+//    }
+//
+//    fun removePropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.removePropertyChangeListener(listener)
+//    }
+//}
+//class Person(val name: String, age:Int, salary:Int) : PropertyChangeAware(){
+//    var age: Int = age
+//        set(newValue){
+//            val oldValue = field
+//            field = newValue
+//            changeSupport.firePropertyChange("age", oldValue, newValue)
+//        }
+//    var salary: Int = salary
+//        set(newValue){
+//            val oldValue = field
+//            field = newValue
+//            changeSupport.firePropertyChange("salary", oldValue, newValue)
+//        }
+//}
+//
+//fun main() {
+//    val p = Person("Dmitry",  34, 2000)
+//    p.addPropertyChangeListener(
+//        PropertyChangeListener { evt ->
+//            println("Property ${evt.propertyName} changed from ${evt.oldValue} to ${evt.newValue}")
+//        }
+//    )
+//    p.age = 35
+//    p.salary = 2100
+//}
+
+// TODO : 리스트 7.21 도우미 클래스를 통해 프로퍼티 변경 통지 구현하기
+//open class PropertyChangeAware{
+//    protected val changeSupport = PropertyChangeSupport(this)
+//
+//    fun addPropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.addPropertyChangeListener(listener)
+//    }
+//
+//    fun removePropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.removePropertyChangeListener(listener)
+//    }
+//}
+//class ObservableProperty(
+//    val propName: String,
+//    var propValue: Int,
+//    val changeSupport: PropertyChangeSupport
+//){
+//    fun getValue(): Int = propValue
+//    fun setValue(newValue: Int){
+//        val oldValue = propValue
+//        propValue = newValue
+//        changeSupport.firePropertyChange(propName, oldValue, newValue)
+//    }
+//}
+//class Person(
+//    val name: String, age: Int, salary: Int
+//) : PropertyChangeAware(){
+//    val _age = ObservableProperty("age", age, changeSupport)
+//    var age: Int
+//        get() = _age.getValue()
+//        set(value) { _age.setValue(value) }
+//
+//    val _salary = ObservableProperty("salary", salary, changeSupport)
+//    var salary: Int
+//        get() = _salary.getValue()
+//        set(value) {_salary.setValue(value)}
+//}
+//fun main() {
+//    val p = Person("Dmitry",  34, 2000)
+//    p.addPropertyChangeListener(
+//        PropertyChangeListener { evt ->
+//            println("Property ${evt.propertyName} changed from ${evt.oldValue} to ${evt.newValue}")
+//        }
+//    )
+//    p.age = 36
+//    p.salary = 2100
+//}
+
+// TODO : 리스트 7.22 ObservableProperty를 프로퍼티 위임에 사용할 수 있게 바꾼 모습
+//class ObservableProperty(
+//    var propValue: Int,
+//    val changeSupport: PropertyChangeSupport
+//){
+//    operator fun getValue(p: Person, prop: KProperty<*>): Int = propValue
+//    operator fun setValue(p: Person, prop: KProperty<*>, newValue: Int){
+//        val oldValue = propValue
+//        propValue = newValue
+//        changeSupport.firePropertyChange(prop.name, oldValue, newValue)
+//    }
+//}
+
+// TODO : 리스트 7.23 위임 프로퍼티를 통해 프로퍼티 변경 통지 받기
+//open class PropertyChangeAware{
+//    protected val changeSupport = PropertyChangeSupport(this)
+//
+//    fun addPropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.addPropertyChangeListener(listener)
+//    }
+//
+//    fun removePropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.removePropertyChangeListener(listener)
+//    }
+//}
+//
+//class ObservableProperty(
+//    var propValue: Int,
+//    val changeSupport: PropertyChangeSupport
+//) {
+//    operator fun getValue(p: Person, prop: KProperty<*>): Int = propValue
+//    operator fun setValue(p: Person, prop: KProperty<*>, newValue: Int) {
+//        val oldValue = propValue
+//        propValue = newValue
+//        changeSupport.firePropertyChange(prop.name, oldValue, newValue)
+//    }
+//}
+//
+//class Person(
+//    val name: String, age: Int, salary: Int
+//) : PropertyChangeAware(){
+//    var age : Int by ObservableProperty(age, changeSupport)
+//    var salary: Int by ObservableProperty(salary, changeSupport)
+//}
+
+// TODO : 리스트 7.24 Delegate.observable을 사용해 프로퍼티 변경 통지 구현하기
+open class PropertyChangeAware{
+    protected val changeSupport = PropertyChangeSupport(this)
+
+    fun addPropertyChangeListener(listener: PropertyChangeListener){
+        changeSupport.addPropertyChangeListener(listener)
+    }
+
+    fun removePropertyChangeListener(listener: PropertyChangeListener){
+        changeSupport.removePropertyChangeListener(listener)
     }
 }
+
+class Person(
+    val name: String, age: Int, salary: Int
+) : PropertyChangeAware(){
+    private val observer = {
+        prop: KProperty<*>, oldValue:Int, newValue:Int ->
+        changeSupport.firePropertyChange(prop.name, oldValue, newValue)
+    }
+    var age: Int by Delegates.observable(age, observer)
+    var salary: Int by Delegates.observable(salary, observer)
+}
+
 fun main() {
-    val map = mapOf("Oracle" to "Java", "JetBrains" to "Kotlin")
-    printEntries(map)
+    val p = Person("Dmitry",  34, 2000)
+    p.addPropertyChangeListener(
+        PropertyChangeListener { evt ->
+            println("Property ${evt.propertyName} changed from ${evt.oldValue} to ${evt.newValue}")
+        }
+    )
+    p.age = 36
+    p.salary = 2100
 }
