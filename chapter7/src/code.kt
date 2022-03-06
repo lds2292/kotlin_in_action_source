@@ -1,12 +1,3 @@
-import java.beans.PropertyChangeListener
-import java.beans.PropertyChangeSupport
-import java.lang.IndexOutOfBoundsException
-import java.math.BigDecimal
-import java.math.BigInteger
-import java.time.LocalDate
-import kotlin.properties.Delegates
-import kotlin.reflect.KProperty
-
 // data class Point(val x:Int, val y:Int)
 
 // TODO : 리스트 7.1 plus 연산자 구현하기
@@ -414,35 +405,82 @@ import kotlin.reflect.KProperty
 //}
 
 // TODO : 리스트 7.24 Delegate.observable을 사용해 프로퍼티 변경 통지 구현하기
-open class PropertyChangeAware{
-    protected val changeSupport = PropertyChangeSupport(this)
-    fun addPropertyChangeListener(listener: PropertyChangeListener){
-        changeSupport.addPropertyChangeListener(listener)
-    }
+//open class PropertyChangeAware{
+//    protected val changeSupport = PropertyChangeSupport(this)
+//    fun addPropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.addPropertyChangeListener(listener)
+//    }
+//
+//    fun removePropertyChangeListener(listener: PropertyChangeListener){
+//        changeSupport.removePropertyChangeListener(listener)
+//    }
+//}
+//
+//class Person(
+//    val name: String, age: Int, salary: Int
+//) : PropertyChangeAware(){
+//    private val observer = {
+//        prop: KProperty<*>, oldValue:Int, newValue:Int ->
+//        changeSupport.firePropertyChange(prop.name, oldValue, newValue)
+//    }
+//    var age: Int by Delegates.observable(age, observer)
+//    var salary: Int by Delegates.observable(salary, observer)
+//}
+//
+//fun main() {
+//    val p = Person("Dmitry",  34, 2000)
+//    p.addPropertyChangeListener(
+//        PropertyChangeListener { evt ->
+//            println("Property ${evt.propertyName} changed from ${evt.oldValue} to ${evt.newValue}")
+//        }
+//    )
+//    p.age = 36
+//    p.salary = 2100
+//}
 
-    fun removePropertyChangeListener(listener: PropertyChangeListener){
-        changeSupport.removePropertyChangeListener(listener)
-    }
+// TODO : 리스트 7.25 값을 맵에 저장하는 프로퍼티 정의하기
+//class Person{
+//    // 추가 정보
+//    private val _attributes = hashMapOf<String, String>()
+//    fun setAttribute(attrName: String, value: String){
+//        _attributes[attrName] = value
+//    }
+//
+//    // 필수 정보
+//    val name: String
+//        get() = _attributes["name"]!!
+//}
+//
+//fun main() {
+//    val p = Person()
+//    val data = mapOf("name" to "Dmitry", "company" to "JetBrains")
+//    for ((attrName, value) in data) {
+//        p.setAttribute(attrName, value)
+//    }
+//    println(p.name)
+//}
+
+// TODO : 리스트 7.26 값을 맵에 저장하는 위임 프로퍼티 사용하기
+//class Person{
+//    private val _attributes = hashMapOf<String, String>()
+//    fun setAttribute(attrName: String, value: String){
+//        _attributes[attrName] = value
+//    }
+//
+//    // 위임 프로퍼티로 맵을 사용한다
+//    val name: String by _attributes
+//}
+
+// TODO : 리스트 7.27 위임 프로퍼티를 사용해 데이터베이스 칼럼 접근하기
+object Users : IdTable(){   // 객체는 데이터베이스 테이블에 해당한다
+    // 프로퍼티는 테이블 칼럼에 해당한다
+    val name = varchar("name", length = 50).index()
+    val age = integer("age")
 }
 
-class Person(
-    val name: String, age: Int, salary: Int
-) : PropertyChangeAware(){
-    private val observer = {
-        prop: KProperty<*>, oldValue:Int, newValue:Int ->
-        changeSupport.firePropertyChange(prop.name, oldValue, newValue)
-    }
-    var age: Int by Delegates.observable(age, observer)
-    var salary: Int by Delegates.observable(salary, observer)
-}
-
-fun main() {
-    val p = Person("Dmitry",  34, 2000)
-    p.addPropertyChangeListener(
-        PropertyChangeListener { evt ->
-            println("Property ${evt.propertyName} changed from ${evt.oldValue} to ${evt.newValue}")
-        }
-    )
-    p.age = 36
-    p.salary = 2100
+// 각 User 인스턴스는 테이블에 들어있는 구체적인 엔티티에 해당한다
+class User(id: EntityID) : Entity(id){
+    // 사용자 이름은 데이터베이스 "name"칼럼에 들어있다
+    var name: String by Users.name
+    var age: Int by Users.age
 }
