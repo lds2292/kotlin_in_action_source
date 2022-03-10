@@ -84,16 +84,16 @@
 //}
 
 // TODO : 리스트 7.8 compareTo 메소드 구현하기
-//class Person(val firstName:String, val lastName: String) : Comparable<Person>{
-//    override fun compareTo(other: Person): Int {
-//        return compareValuesBy(this, other, Person::lastName, Person::firstName)
-//    }
-//}
-//fun main() {
-//    val p1 = Person("Alice", "Smith")
-//    val p2 = Person("Bob", "Johnson")
-//    println(p1 < p2)
-//}
+class Person(val firstName:String, val lastName: String) : Comparable<Person>{
+    override fun compareTo(other: Person): Int {
+        return compareValuesBy(this, other, Person::lastName, Person::firstName)
+    }
+}
+fun main() {
+    val p1 = Person("Alice", "Smith")
+    val p2 = Person("Bob", "Johnson")
+    println(p1 < p2)
+}
 
 // TODO : 리스트 7.9 get 관례 구현하기
 //class Point(val x:Int, val y:Int)
@@ -472,15 +472,15 @@
 //}
 
 // TODO : 리스트 7.27 위임 프로퍼티를 사용해 데이터베이스 칼럼 접근하기
-object Users : IdTable(){   // 객체는 데이터베이스 테이블에 해당한다
-    // 프로퍼티는 테이블 칼럼에 해당한다
-    val name = varchar("name", length = 50).index()
-    val age = integer("age")
-}
-
-// 각 User 인스턴스는 테이블에 들어있는 구체적인 엔티티에 해당한다
-class User(id: EntityID) : Entity(id){
-    // 사용자 이름은 데이터베이스 "name"칼럼에 들어있다
-    var name: String by Users.name
-    var age: Int by Users.age
-}
+//object Users : IdTable(){   // 객체는 데이터베이스 테이블에 해당한다
+//    // 프로퍼티는 테이블 칼럼에 해당한다
+//    val name = varchar("name", length = 50).index()
+//    val age = integer("age")
+//}
+//
+//// 각 User 인스턴스는 테이블에 들어있는 구체적인 엔티티에 해당한다
+//class User(id: EntityID) : Entity(id){
+//    // 사용자 이름은 데이터베이스 "name"칼럼에 들어있다
+//    var name: String by Users.name
+//    var age: Int by Users.age
+//}
