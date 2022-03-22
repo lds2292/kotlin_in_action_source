@@ -1,3 +1,7 @@
+import java.io.BufferedReader
+import java.io.FileReader
+import java.util.concurrent.locks.Lock
+
 // TODO : 리스트 8.1 간단한 고차 함수 정의하기
 //fun twoAndThree(operation: (Int, Int) -> Int) {
 //    val result = operation(2, 3)
@@ -135,6 +139,7 @@ data class SiteVisit(
     val duration: Double,
     val os: OS
 )
+
 enum class OS { WINDOWS, LINUX, MAC, IOS, ANDROID }
 
 val log = listOf(
@@ -173,10 +178,143 @@ val log = listOf(
 //}
 
 // TODO : 리스트 8.12 고차 함수를 사용해 중복 제거하기
-fun List<SiteVisit>.averageDurationFor(predicate: (SiteVisit) -> Boolean) =
-    filter(predicate).map(SiteVisit::duration).average()
+//fun List<SiteVisit>.averageDurationFor(predicate: (SiteVisit) -> Boolean) =
+//    filter(predicate).map(SiteVisit::duration).average()
+//
+//fun main() {
+//    println(log.averageDurationFor { it.os in setOf(OS.ANDROID, OS.IOS) })
+//    println(log.averageDurationFor { it.os == OS.IOS && it.path == "/signup" })
+//}
 
-fun main() {
-    println(log.averageDurationFor { it.os in setOf(OS.ANDROID, OS.IOS) })
-    println(log.averageDurationFor { it.os == OS.IOS && it.path == "/signup" })
-}
+// TODO : 리스트 8.13 인라인 함수 정의하기
+//inline fun <T> synchronized(lock: Lock, action: () -> T) : T {
+//    lock.lock()
+//    try {
+//        return action()
+//    } finally {
+//        lock.unlock()
+//    }
+//}
+//fun foo(l:Lock){
+//    println("Before sync")
+//    synchronized(l){
+//        println("Action")
+//    }
+//    println("After sync")
+//}
+
+// TODO : 리스트 8.14 람다를 사용해 컬렉션 거르기
+//data class Person(val name: String, val age: Int)
+//fun main() {
+//    val people = listOf(Person("Alice", 29), Person("Bob",31))
+//    println(people.filter { it.age < 30 })
+//}
+
+// TODO : 리스트 8.15 컬렉션을 직접 거르기
+//data class Person(val name: String, val age: Int)
+//fun main() {
+//    val people = listOf(Person("Alice", 29), Person("Bob",31))
+//    val result = mutableListOf<Person>()
+//    for (person in people) {
+//        if (person.age < 30) result.add(person)
+//    }
+//    println(result)
+//}
+
+// TODO : 리스트 8.17 use 함수를 자원 관리에 활용하기
+//fun readFirstLineFromFile(path: String): String {
+//    // BufferedReader 객체를 만들고 "use"함수를 호출하면서 파일에 대한 연산을 실행할 람다를 넘긴다
+//    BufferedReader(FileReader(path)).use { br ->
+//        return br.readLine()
+//    }
+//}
+
+// TODO : 리스트 8.18 일반 루프 안에서 return 사용하기
+//data class Person(val name: String, val age: Int)
+//val people = listOf(Person("Alice", 29), Person("Bob",31))
+//fun lookForAlice(people: List<Person>){
+//    for (person in people) {
+//        if (person.name == "Alice"){
+//            println("Found!")
+//            return
+//        }
+//    }
+//    println("Alice is not found")
+//}
+//fun main() {
+//    lookForAlice(people)
+//}
+
+// TODO : 리스트 8.19 forEach에 전달된 람다에서 return 사용하기
+//data class Person(val name: String, val age: Int)
+//val people = listOf(Person("Alice", 29), Person("Bob",31))
+//fun lookForAlice(people: List<Person>){
+//    people.forEach{
+//        if (it.name == "Alice"){
+//            println("Found!")
+//            return
+//        }
+//    }
+//    println("Alice is not Found")
+//}
+//fun main() {
+//    lookForAlice(people)
+//}
+
+// TODO : 리스트 8.20 레이블을 통해 로컬 리턴 사용하기
+//data class Person(val name: String, val age: Int)
+//val people = listOf(Person("Alice", 29), Person("Bob",31))
+//fun lookForAlice(people: List<Person>){
+//    people.forEach label@{ // 람다식 앞에 레이블을 붙인다
+//        if (it.name == "Alice"){
+//            return@label  // return@label은 앞에서 정의한 레이블을 참조한다
+//        }
+//    }
+//    println("Alice might be somewhere") // 항상 이 줄이 출력된다
+//}
+//fun main() {
+//    lookForAlice(people)
+//}
+
+// TODO : 리스트 8.21 함수 이름을 return 레이블로 사용하기
+//data class Person(val name: String, val age: Int)
+//val people = listOf(Person("Alice", 29), Person("Bob",31))
+//fun lookForAlice(people: List<Person>){
+//    people.forEach{ // 람다식 앞에 레이블을 붙인다
+//        if (it.name == "Alice"){
+//            return@forEach  // return@label은 앞에서 정의한 레이블을 참조한다
+//        }
+//    }
+//    println("Alice might be somewhere") // 항상 이 줄이 출력된다
+//}
+//fun main() {
+//    lookForAlice(people)
+//}
+
+// TODO : 리스트 8.22 무명 함수안에서 return 사용하기
+//data class Person(val name: String, val age: Int)
+//val people = listOf(Person("Alice", 29), Person("Bob",31))
+//fun lookForAlice(people: List<Person>){
+//    people.forEach(fun (person){ // 람다 식 대신 무명 함수를 사용한다
+//        if (person.name == "Alice") return // "return"은 가장 가까운 함수를 가리키는데 이 위치에서 가장 가까운 함수는 무명함수다
+//        println("${person.name} is not Alice")
+//    })
+//}
+//fun main() {
+//    lookForAlice(people)
+//}
+
+// TODO : 리스트 8.23 filter에 무명 함수 넘기기
+//data class Person(val name: String, val age: Int)
+//val people = listOf(Person("Alice", 29), Person("Bob",31))
+//fun main() {
+//    people.filter(fun (person):Boolean{
+//        return person.age > 30
+//    })
+//}
+// TODO : 리스트 8.24 식이 본문인 무명 함수 사용하기
+//data class Person(val name: String, val age: Int)
+//val people = listOf(Person("Alice", 29), Person("Bob",31))
+//fun main() {
+//    people.filter(fun (person) = person.age < 30)
+//}
