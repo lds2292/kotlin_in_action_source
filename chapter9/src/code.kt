@@ -156,30 +156,78 @@ import java.lang.StringBuilder
 //}
 
 // TODO : 리스트 9.13 공변적 컬렉션 역할을 하는 클래스 사용하기
-open class Animal {
-    fun feed() { println("feed()") }
-}
+//open class Animal {
+//    fun feed() { println("feed()") }
+//}
+//
+//class Herd<out T: Animal>{ // T는 이제 공변적이다
+//    val size: Int get() = 10
+//    operator fun get(i: Int): T { }
+//}
+//
+//fun feedAll(animals: Herd<Animal>){
+//    for (i in 0 until animals.size) {
+//        animals[i].feed()
+//    }
+//}
+//
+//class Cat : Animal(){
+//    fun cleanLitter(){}
+//}
+//
+//fun takeCareOfCats(cats: Herd<Cat>){
+//    for (i in 0 until cats.size){
+//        cats[i].cleanLitter()
+//    }
+//    feedAll(cats) // 캐스팅을 할 필요가 없다
+//
+//    mutableListOf(1,2,3).add()
+//}
 
-class Herd<out T: Animal>{ // T는 이제 공변적이다
-    val size: Int get() = 10
-    operator fun get(i: Int): T { }
-}
+// TODO : Comparator<Any>
+//fun main() {
+//    val anyComparator = Comparator<Any> {
+//        e1, e2 -> e1.hashCode() - e2.hashCode()
+//    }
+//
+//    val strings: List<String> = listOf("a","b","c","d")
+//    strings.sortedWith(anyComparator)
+//    // 문자열과 같은 구체적인 타입의 객체를 비교하기 위해
+//    // 모든 객체를 비교하는 Comparator를 사용할 수 있다
+//}
 
-fun feedAll(animals: Herd<Animal>){
-    for (i in 0 until animals.size) {
-        animals[i].feed()
+// TODO : 리스트 9.14 무공변 파라미터 타입을 사용하는 데이터 복사 함수
+//fun <T> copyData(source: MutableList<T>, destination: MutableList<T>){
+//    for (item in source){
+//        destination.add(item)
+//    }
+//}
+
+// TODO : 리스트 9.15 타입 파라미터가 둘인 데이터 복사 함수
+// source의 원소 타입은 destination 원소 타입의 하위 타입이어야 한다
+//fun <T: R, R> copyData(source: MutableList<T>, destination: MutableList<R>){
+//    for (item in source){
+//        destination.add(item)
+//    }
+//}
+//fun main() {
+//    val ints = mutableListOf(1,2,3)
+//    val anyItems = mutableListOf<Any>()
+//    copyData(ints, anyItems)  // Int는 Any의 하위 타입이므로 이 함수를 호출할 수 있다
+//    println(anyItems)
+//}
+
+// TODO : 리스트 9.16 아웃-프로젝션 타입 파라미터를 사용하는 데이터 복사 함수
+// out 키워드를 붙이면 T타입을 in 위치에 사용하지 않겠다는 뜻이다
+//fun <T> copyData(source: MutableList<out T>, destination: MutableList<T>){
+//    for (item in source){
+//        destination.add(item)
+//    }
+//}
+
+// TODO : 리스트 9.17 인-프로젝션 타입 파라미터를 사용하는 데이터 복사 함수
+fun <T> copyData(source: MutableList<T>, destination: MutableList<in T>){
+    for (item in source){
+        destination.add(item)
     }
-}
-
-class Cat : Animal(){
-    fun cleanLitter(){}
-}
-
-fun takeCareOfCats(cats: Herd<Cat>){
-    for (i in 0 until cats.size){
-        cats[i].cleanLitter()
-    }
-    feedAll(cats) // 캐스팅을 할 필요가 없다
-
-    mutableListOf(1,2,3).add()
 }
