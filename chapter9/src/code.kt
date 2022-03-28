@@ -1,6 +1,7 @@
 import java.lang.Appendable
-import java.lang.IllegalArgumentException
 import java.lang.StringBuilder
+import kotlin.IllegalArgumentException
+import kotlin.reflect.KClass
 
 // TODO : 리스트 9.1 제네릭 함수 호출하기
 //fun main() {
@@ -226,8 +227,112 @@ import java.lang.StringBuilder
 //}
 
 // TODO : 리스트 9.17 인-프로젝션 타입 파라미터를 사용하는 데이터 복사 함수
-fun <T> copyData(source: MutableList<T>, destination: MutableList<in T>){
-    for (item in source){
-        destination.add(item)
+//fun <T> copyData(source: MutableList<T>, destination: MutableList<in T>){
+//    for (item in source){
+//        destination.add(item)
+//    }
+//}
+
+// TODO : 리스트 9.18 입력 검증을 위한 인터페이스
+//interface FieldValidator<in T> {
+//    fun validate(input: T): Boolean
+//}
+//
+//object DefaultStringValidator : FieldValidator<String>{
+//    override fun validate(input: String) = input.isNotEmpty()
+//}
+//
+//object DefaultIntValidator : FieldValidator<Int>{
+//    override fun validate(input: Int) = input >= 0
+//}
+//
+//fun main() {
+//    val validators = mutableMapOf<KClass<*>, FieldValidator<*>>()
+//    validators[String::class] = DefaultStringValidator
+//    validators[Int::class] = DefaultIntValidator
+//
+//    validators[String::class]!!.validate("") // 맵에 지정된 값의 타입은 FieldValidator<*>이다
+//}
+
+// TODO : 리스트 9.19 검증기를 가져오면서 명시적 타입 캐스팅 사용하기
+//interface FieldValidator<in T> {
+//    fun validate(input: T): Boolean
+//}
+//
+//object DefaultStringValidator : FieldValidator<String>{
+//    override fun validate(input: String) = input.isNotEmpty()
+//}
+//
+//object DefaultIntValidator : FieldValidator<Int>{
+//    override fun validate(input: Int) = input >= 0
+//}
+//
+//fun main() {
+//    val validators = mutableMapOf<KClass<*>, FieldValidator<*>>()
+//    validators[String::class] = DefaultStringValidator
+//    validators[Int::class] = DefaultIntValidator
+//
+//    val stringValidator = validators[String::class] as FieldValidator<String>
+//    println(stringValidator.validate(""))
+//}
+
+// TODO : 리스트 9.20 검증기를 잘못 가져온 경우
+//interface FieldValidator<in T> {
+//    fun validate(input: T): Boolean
+//}
+//
+//object DefaultStringValidator : FieldValidator<String>{
+//    override fun validate(input: String) = input.isNotEmpty()
+//}
+//
+//object DefaultIntValidator : FieldValidator<Int>{
+//    override fun validate(input: Int) = input >= 0
+//}
+//
+//fun main() {
+//    val validators = mutableMapOf<KClass<*>, FieldValidator<*>>()
+//    validators[String::class] = DefaultStringValidator
+//    validators[Int::class] = DefaultIntValidator
+//
+//    val stringValidator = validators[Int::class] as FieldValidator<String>
+//    println(stringValidator.validate(""))
+//}
+
+// TODO : 리스트 9.21 검증기 컬렉션에 대한 접근 캡슐화하기
+interface FieldValidator<in T> {
+    fun validate(input: T): Boolean
+}
+object DefaultStringValidator : FieldValidator<String>{
+    override fun validate(input: String) = input.isNotEmpty()
+}
+object DefaultIntValidator : FieldValidator<Int>{
+    override fun validate(input: Int) = input >= 0
+}
+object Validators {
+    // 앞 예쩨와 같은 맵을 사용하지만 외부에서 접근할 수 없다
+    private val validators =
+        mutableMapOf<KClass<*>, FieldValidator<*>>()
+
+    fun <T: Any> registerValidator(
+        kClass: KClass<T>, fieldValidator: FieldValidator<T>
+    ){
+        // 어떤 클래스와 검증기가 타입이 맞아 떨어지는 경우에만
+        // 그 클래스와 검증기 정보를 키/값 쌍으로 넣는다
+        validators[kClass] = fieldValidator
     }
+
+    operator fun <T: Any> get(kClass: KClass<T>): FieldValidator<T> =
+        validators[kClass] as? FieldValidator<T>
+            ?: throw IllegalArgumentException(
+                "No validator for ${kClass.simpleName}"
+            )
+}
+
+fun main() {
+    Validators.registerValidator(String::class, DefaultStringValidator)
+    Validators.registerValidator(Int::class, DefaultIntValidator)
+    println(Validators[String::class].validate("Kotlin"))
+    println(Validators[Int::class].validate(42))
+
+    println(Validators[String::class].validate(42))
 }
