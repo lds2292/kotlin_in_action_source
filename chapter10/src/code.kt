@@ -49,15 +49,16 @@ import kotlin.reflect.full.memberProperties
 //    kFunction.call(42)
 //}
 
-//import kotlin.reflect.KFunction2
-//
-//fun sum(x: Int, y: Int) = x+y
-//val kFunction: KFunction2<Int, Int, Int> = ::sum
-//fun main() {
-//    println(kFunction.invoke(1, 2) + kFunction(3, 4))
-//
+import kotlin.reflect.KFunction2
+
+fun sum(x: Int, y: Int) = x+y
+val kFunction: KFunction2<Int, Int, Int> = ::sum
+//val kFunction = ::sum
+fun main() {
+    println(kFunction.invoke(1, 2) + kFunction(3, 4))
+
 //    kFunction(1)
-//}
+}
 
 //var counter = 0
 //fun main() {
@@ -130,14 +131,14 @@ import kotlin.reflect.full.memberProperties
 //}
 
 // TODO : 리스트 10.5 커스텀 직렬화기를 지원하는 프로퍼티 직렬화 함수
-private fun StringBuilder.serializeProperty(
-    prop: KProperty1<Any, *>, obj: Any
-){
-    val name =  prop.findAnnotation<JsonName>()?.name ?: prop.name
-    serializeString(name)
-    append(": ")
-    val value = prop.get(obj)
-    // 커스텀 직렬화가 없다면 일반적인 방법에 따라 프로퍼티를 직렬화 한다
-    val jsonValue  = prop.getSerializer()?.toJsonValue(value) ?: value
-    serializePropertyValue(prop.get(obj))
-}
+//private fun StringBuilder.serializeProperty(
+//    prop: KProperty1<Any, *>, obj: Any
+//){
+//    val name =  prop.findAnnotation<JsonName>()?.name ?: prop.name
+//    serializeString(name)
+//    append(": ")
+//    val value = prop.get(obj)
+//    // 커스텀 직렬화가 없다면 일반적인 방법에 따라 프로퍼티를 직렬화 한다
+//    val jsonValue  = prop.getSerializer()?.toJsonValue(value) ?: value
+//    serializePropertyValue(prop.get(obj))
+//}
